@@ -1,0 +1,312 @@
+<hr>
+The canonical source for the infobot source and documentation is
+<a href="http://www.infobot.org/">http://www.infobot.org/</a>.
+<hr>
+<p>
+The infobot connects to an Internet Relay Chat (IRC) server, 
+joins some channels (maybe), and begins accumulating factoids.
+To run one, download the source, uncompress it, untar it,
+edit the config files, and it up.
+<p>
+Interacting with the bot is pretty straightforward.  Most of
+the commands and variables available to users are listed below.
+The bot will interact via message or on-channel.
+<p>
+
+<hr>
+    <h2> Interacting with an infobot</h2>
+
+    <UL>
+      <LI> <b>setting</b> factoids: X is Y
+	<p>
+	  Saying something like "X is Y" somewhere that the infobot 
+	  can see it will cause the bot to store a factoid, unless
+	  X is already defined.  It sets the value of X to Y.
+	<p>
+      <LI> <b>accessing</b> factoids: What is X?
+	<p>
+	  You can ask an infobot about something in a number of
+	  different ways, including "what is X?", "where is X?",
+	  or just plain "X?".
+	</p>
+	<LI> <b>altering</b> factoids: s/A/B/
+	<p>
+	if you just want to change a <i>part</i> of a factoid, use
+	the <code>s///</code>operator.  you have to address the bot
+	or use a private medium to do this.
+	<p>
+	MyBot, X =~ s/A/B/	
+	<p>
+	will change the first occurence of A to B in the factoid 
+	called X.
+	<p>
+
+      <LI>appending to existing entries: <b><code>also</code></b>
+	<p>
+	  One can extend an existing factoid using the
+	  keyword <code>also</code>
+	<p>
+	<UL>
+	    <code>
+	      poink is also a silly word
+	    </code>
+	</UL>
+	<p>
+
+      <LI>erasing a factoid: <b><code>forget</code></b>
+	<p>
+	  A factoid can easily be deleted by using
+	<p>
+	<DIR>
+	    <code>
+	      infobot, forget poink
+	    </code>
+	</DIR>
+	<p>
+
+      <LI>changing a factoid: <code><b>no,</b> ...</code>
+	<p>
+	  You can change the entry for a factoid completely using
+	<p>
+	<UL>
+	    <code>
+	      no, infobot, x is wugga wugga.
+	    </code>
+	</UL>
+	    <p>
+	  which deletes the prior entry (if possible)
+	  and replaces it with the new one.
+	<p>
+
+      <LI> having the bot tell someone else something: <b><code>tell</code></b>
+	<p>
+	  A user can ask an infobot to tell someone else something.
+	  <p>
+	  <UL>
+	    <code>
+	      infobot, tell fimmtiu about no web
+	    </code>
+	    <p>
+	</UL>
+
+      <LI><b>karma</b> / plusplus
+	<p>
+	  karma for a concept may be incremented or decremeted using
+	  <code>++</code> and <code>--</code>.  You can get the 
+	  current karma 'score' for something by asking for it.
+	  <p>
+	  <UL>
+	    <code>
+	      oznoid++
+	    <p>
+	      oznoid--
+	    <p>
+	      karma for oznoid
+	    </code>
+	    <p>
+	  </UL>
+
+      <LI> <code><b>status</b></code>
+	<p>
+	  infobots reply to status requests.
+	  <p>
+	  <dir>
+	  -> [url] status<p>
+	    [url!infobot@ALF5.SPEECH.CS.CMU.EDU] Since Fri Mar 26 06:42:27 1999, there have been 409
+	    modifications and 2604 questions.  I have been awake for 5 days, 4 hours, 24 minutes,
+	    18 seconds this session, and currently reference 47529 factoids.
+	  </dir>
+
+	</p>
+
+      <LI>joining an allowed channel: <code><b>join</b> #infobot</code>
+	<p>
+	  On IRC, you can tell the infobot to join a channel
+	  that it's allowed to join with
+	<p>
+	<UL>
+	    <code>
+	      infobot, join #infobot
+	    </code>
+	</UL>
+	    <p>
+	  If it is allowed to (in its paramter settings), it
+	  will try to join the channel.
+	<p>
+	  
+
+      <LI>leaving a channel: <code><b>part</b> #infobot</code>
+	<p>
+	  This causes the bot to leave the given channel
+	<p>
+	<UL>
+	    <code>
+	      infobot, part #infobot
+	    </code>
+	</UL>
+	    <p>
+	  <code>leave</code> is a synonym for <code>part</code>.
+	<p>
+
+      <LI><b>random</b> responses with <code>|</code>
+	<p>
+	  You can set a list from which to pick a random response by
+	  using <code>|</code>
+	  <p>
+	<UL>
+	    <code>
+	      x is a|b|c|d
+	    </code>
+	</UL>
+	<p>
+	  When x is asked about, the infobot will randomly choose from
+	  the <code>|</code>-spearated list.
+	<p>
+
+      <LI> The <b><code>&lt;reply&gt;</code></b> factoid tag.
+	<p>
+	  Normally, when the infobot replies to "What is X", it says
+	  "X is Y".  This form makes it just reply "Y".
+	  <p>
+	  <UL>
+	    <code>
+	      X is &lt;reply&gt; Y
+	    </code>
+	  </UL>
+	<p>
+
+      <LI> The <b><code>&lt;action&gt;</code></b> factoid tag (as of 0.43.5)
+	<p>
+	This causes the bot to respond as with <reply> except 
+	as an ACTION.
+	  <p>
+	  <UL>
+	    <code>
+	      X is &lt;action&gt; Y
+	    </code>
+	  </UL>
+	<p>
+
+      <LI><b>backwacking</b>
+	<p>
+	  Use <code>\</code> to protect items from evaluation.
+	<p>
+	<UL>
+	    <CODE>
+	      x is y is y
+	    </CODE>
+	</UL>
+	<p>
+	will normally set <code>x =is=> y is y</code>, but
+	<p>
+	<UL>
+	    <CODE>
+	      x \is y is y
+	    </CODE>
+	</UL>
+	<p>
+	  will set
+		<p>
+	      <UL>
+		  <code>x is y =is=> y</code>
+	      </UL> 
+	      <p>
+	      The <code>forget</code>
+	      and <code>no</code> (update) operators apply before checking
+	      for this. This is also useful for getting around the 
+	      dereferencing of "i" and "me" and so on.
+	<p>
+
+      <LI>the <b><code>$who</code></b> variable
+	<p>
+	  Contains the nickname person currently addressing the bot.
+	  It can be used effectively in replies.
+	  <p>
+	  <UL>
+	    <code>
+	      nice day is &lt;reply&gt; you betcha, $who.
+	    </code>
+	  </UL>
+	<p>
+
+      <LI>the <b><code>$date</code></b> variable
+	<p>
+	  Contains the current date and time, at the bot's host.
+	<p>
+
+	<LI> <code><b>literal</b> foo</code>
+	<p> 
+	   returns the value without the usual post-processing. 
+        </p>	
+	<p>
+
+      <LI>Ignoring users: <b>ignore</b> nickname, <b>ignore *.a.com</b>
+	<p>
+		Users with the P (oP) flag can tell the bot
+		to ignore people or hostmasks. And 'unignore'.
+		use 'ignorelist' to get the current list of ignored masks,
+		if you have the P flag.
+	</p>
+      <LI><code><b>op</b></code> on channel
+	<p>
+	  The 'p' (oP) flag in the userfile allows this
+	  to work. You'll need to set a hostmask. See
+	  <code>files/infobot.users</code> Also uses a 
+	  crypted password.
+	  <p>
+	  <dir>
+	  <code>
+	  /msg &lt;bot&gt; &lt;password&gt; op
+	  </code>
+	  </dir>
+	<p>
+      <LI><b><code>die</code></b>
+	<p>
+	  If the bot owner (+O, Owner) says this or messages it to the bot, 
+	  it will kill itself.
+	<p>
+    </UL>
+
+<hr>
+    <h2> scripts/utilities </h2>
+    
+    The infobot comes with some scripts for working with
+    the DBM files.
+    <p>
+
+    <UL>
+      <LI><code>update_db</code>
+	<p>
+	  This takes a flat ascii file and inserts it into a DBM file.
+	  It creates a new DBM if it didn't exist.
+	<p>
+	<UL>
+	    <CODE>
+	      scripts/update_db factpacks/code_to_country.txt infobot-is
+	    </CODE>
+	</UL>
+	<p>
+	  will add the factoids in <code>code_to_country.txt</code>
+	  to the <code>infobot-is</code> DBM.
+	<p>
+      <LI><code>dump_db</code>
+	<p>
+	  The converse.  It dumps out the DBM file to a flat
+	  ascii file. Note there is no extension on the DBM name,
+	  even though the system may use one.
+	<p>
+	<UL>
+	    <CODE>
+	      scripts/dump_db infobot-is
+	    </CODE>
+	</UL>
+	<p>
+	  Note there is no extension on the DBM name, even though the 
+	  system may use one (like <code>.pag</code> and 
+	  <code>.dir</code> or <code>.db</code>).
+	<p>
+
+    </UL>
+
+<hr>
+

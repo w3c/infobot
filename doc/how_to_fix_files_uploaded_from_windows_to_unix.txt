@@ -1,0 +1,37 @@
+FIXING PERL AND TEXT FILES THAT HAVE BEEN UPLOADED FROM WINDOWS
+
+OK when you upload a file from Windows, it contains all
+these nasty control-M's on each line that screw everything
+up.
+
+To see them, use
+
+   cat -vet <file>
+
+where <file> is the name of some file you want to check.
+You should see the control-M's.  
+
+To get rid of them, use
+
+   perl -pi -e 's/\cM//g' <file>
+
+while <file> is the file name.  This does an in-place edit
+that removes all the control-Ms.  You can do this to a bunch
+of files at once:
+
+   perl -pi -e 's/\cM//g' <file1> <file2> <file3>
+
+or even
+
+   perl -pi -e 's/\cM//g' *
+
+if all the files in the directory are text (like they ARE in
+the files/ directory of the infobot).
+
+   perl -pi -e 's/\cM//g' files/* src/* infobot 
+
+from inside the infobot directory should clean everything up.
+You should also clean any factpacks or factoid files or logs
+that you use for processing.
+
+kevin

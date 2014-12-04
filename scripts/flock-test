@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w
+use strict;
+
+# $Id: flock-test,v 1.1 2000/11/01 22:41:34 lenzo Exp $
+
+#use sigtrap qw(die normal-signals);
+
+use Fcntl ':flock';
+use POSIX 'EWOULDBLOCK';
+
+(my $Me = $0) =~ s-.*/--;
+
+$| = 1;
+
+@ARGV == 2 or die "usage: $Me file <sh|ex|nbsh|nbex>";
+my ($file, $type) = @ARGV;
+
+my $no_block = $type =~ s/^nb//;
+my $bits = $type eq 'sh' ? LOCK_SH
+    	    : $type eq 'ex' ? LOCK_EX
+	    : die "$Me: unknown lock type $type\n";
+$type = 'LOCK_' . uc $type;
+
+open FH, "+<$file" or die "$Me: can't read $file: $!\n";
+
+if (flock FH, $bits | LOCK_NB) {
+    print "Locked $file with type $type, sleeping...";
+}
+else {
+    $! == EWOULDBLOCK
+	or die "$Me: can't flock($file, $type | LOCK_NB): $!\n";
+    $no_block and die "$Me: can't immediately lock $file with type $type\n";
+    print "Blocking waiting for $type lock on $file...";
+    flock FH, $bits
+	or die "$Me: can't flock($file, $type): $!\n";
+    print "locked, sleeping...";
+}
+
+sleep;
+
+#END {
+#    if ($locked) {
+#    	flock FH, LOCK_UN or die "$Me: can't unlock $file: $!\n";
+#    }
+#}

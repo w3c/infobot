@@ -1,0 +1,71 @@
+#!/usr/bin/perl
+
+$dbmdir = "/home/infobot/";
+$dbmpref = "infobot";
+
+&opendbs;
+
+if (@ARGV) {
+    $query = join(" ", @ARGV);
+    &respond($query);
+} else {
+    print "> ";
+    while (<>) {
+	last if /^\/?quit/i;
+	chomp;
+	if (/s^\/eval\s+/) {
+	    $x = eval($_);
+	    print $x;
+	} else {
+	    &respond($_);
+	}
+	print "> ";
+    }
+} 
+
+sub opendbs {
+    my $dp = "$dbmdir/$dbmpref";
+    dbmopen(%is, "$dbmdir/$dbmpref-is", undef) 
+	|| die "can't open $dbmdir/$dbmpref-is -- please set path";
+    dbmopen(%are, "$dbmdir/$dbmpref-are", undef) 
+	|| die "can't open $dbmdir/$dbmpref-are";
+}
+
+sub checkdbs {
+    my @reply;
+    foreach $k (@_) {
+	push @reply, $is{$k}  if  $is{$k};
+	push @reply, $are{$k} if $are{$k};
+    }
+    return @reply;
+}
+
+sub respond {
+    my $query = $_[0];
+    my @r;
+
+    $query =~ tr/A-Z/a-z/;
+    $query =~ s/wh\S+\s+(is|are)\s+//;
+    $query =~ s/\s*\?\s*$//;
+
+    if ($query =~ /\s+(are|is)\s+/i) {
+	$lhs = $`; $verb = $1; $rhs = $';
+	chomp $rhs;
+	$$verb{$lhs} = $rhs;
+    } else {
+	if (@r = &checkdbs($query)) {
+	    foreach (@r) {
+		chomp;
+		print "$_\n";
+	    }
+	} else {
+	    print "undefined: $query\n";
+	}
+    }
+}
+
+sub dump {
+    foreach (keys %is) {
+	print "$_ => $is{$_}\n";
+    }
+}

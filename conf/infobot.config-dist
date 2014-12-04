@@ -1,0 +1,257 @@
+# parameter settings file for the infobot
+# kevin lenzo (lenzo@cs.cmu.edu)
+
+# note:
+#   '$var' means a parameter that has been named; it is interpolated.
+#   By convention, things with '.ext' (extensions) are text files, and
+#   things with hyphens in them are DBM file prefixes, used for run-time
+#   learning or state maintenance.
+#
+# Nota Bene: Comment out attributes you don't want. Note that the
+#            word "false" is actually a true value! use 0 or comment
+#            out options you don't want.
+
+# the internal name for this bot
+ident            i-bot
+
+# the nickname we want
+wantNick         $ident
+
+# the prefix of the dbm files
+dbname           $ident
+
+# where to put logging info
+logfile          $dbname.log
+
+# plusplus, an idea hijacked from CMU zephyr community,
+# and dkindred++ in particular. Otherwise known
+# as 'karma'.  this is persistant between shutdowns.
+
+plusplus         $dbname-karma
+
+# persistant "seen" db
+seen             $dbname-seen
+
+# do we have an ignore database? uncomment this if not.
+ignore           $dbname-ignore
+
+# inform messages database
+informdb         $dbname-inform.db
+
+# should we ALWAYS close and reopen dbm on update?
+# some systems don't do commitment until quit.
+#
+#   0 => never force sync
+#   1 => force sync on every update
+#   N => force sync every Nth update
+
+commitDBM        5
+
+# Explicitly set the database module.  The default is AnyDBM_File.  If
+# you want to use any shared database files (via sharedDBMs) you have to
+# set this to DB_File.
+
+DBMModule	DB_File
+
+# Specify an extension which should be added to all database names.  By
+# default this is empty.
+
+DBMExt		.db
+
+# Specify which databases will be shared among multiple infobots on the
+# same machine, and so require locking.  By default none are shared.  If
+# you use this at all you have to set DBMModule to DB_File.  This can be
+# a list of database names, or /all (which means every database), or
+# /all-but-ignore (which means every database except the ignore list).
+#
+# As of this writing, the databases are:
+#
+#    is		main database, for singular factoids
+#    are	main database, for plural factoids
+#    ignore	ignored nicks and user/host patterns
+#    plusplus	karma
+#    seen	last seen info by each nick
+
+#sharedDBMs is are plusplus
+#sharedDBMs /all
+#sharedDBMs /all-but-ignore
+
+# X is Y
+# max length of X (the key, 
+#                  the 'left hand side' (LHS) of an assignment, 
+#                  or the first argument)
+
+maxKeySize       50
+
+
+# max length of Y (value or data, the 'right hand side', or 2nd argument)
+maxDataSize      400
+
+# REQUIRE, OPTIONAL, REJECT for different behaviour with URLs
+# REQUIRE  means it will need to be a url type (e.g. file:, http:)
+# OPTIONAL will take anything
+# REJECT   will not accept any urls.  this makes it easy to
+#          run 2 with different nicks and styles.
+
+acceptUrl        OPTIONAL
+
+# IRC-related params
+ircuser          $ident
+realname         $ident
+server           irc.infobot.org
+port             6667
+allowed_channels #infobot #$ident #test
+
+# channels to join
+# use #channel,key (thanks to tile++) for keyed channels
+
+join_channels    #infobot #$ident
+
+# server password, if needed
+# server_pass    myserverpassword
+
+# vhost support... if you have a vhost, you can use this, 
+#                                otherwise it won't work.
+#                                inm++, elph++ for this :)
+# vhost_name     f00.bar.org
+
+# nickServ_pass foo
+# chanServ_pass bar
+
+# addressing is when you name the bot.  if this is REQUIRE,
+# the bot should only speak when spoken to.  BUT it may listen.
+# anything else will mean it can barge in when it thinks it 
+# knows something.
+# "shutup" determines whether you can switch modes on the
+# fly with the bot.  if you use REQUIRE for addressing, you
+# probably want to comment out the shutup line.
+
+addressing       OPTIONAL
+# shutup           TRUE
+
+# ansi screen control is available from 0.32 onwards
+# value of 1 means to use ANSI, 0 means generic bold
+ansi_control     1
+
+# things we may or may not want to allow. 1 = allow, 0 otherwise.
+# do you want to be a desktop calc?
+perlMath         1
+fortranMath      0
+
+# do you want to allow DNS lookup/Internic/Traceroute?
+allowDNS         1
+allowTraceroute  1
+allowInternic    1
+
+# ord/chr etc
+allowConv        1
+
+# tell so-and-so about such-and-such
+# allowTelling     1
+
+# let any old joe update stuff. if this is 0, you'll have to
+# either change some code, do everything with e.g. update_db,
+# or do something else arcane to get factoids in.
+allowUpdate      1
+
+# How much verbage to display on the console
+VERBOSITY        1
+
+# the magic hack word to unignore everyone
+unignoreWord     unignore-everyone
+
+# where configuration and help files and such live, the default is the
+# files subdir of the main directory
+confdir          conf
+
+# my help file.  this will get confdir prepended
+# you may want to change this to $ident.help
+
+helpfile         infobot.help
+
+srcdir           src
+extradir         extras
+
+# within how long of getting the same reply should
+# we not respond (irc mode only).  in seconds.
+
+repeatIgnoreInterval 8
+
+# in what contexts do we let people make the bot leave a
+# channel (this is an or'd list; public private)
+
+allowLeave       public
+
+# our user list default file (in miscdir)
+# you may want to change this to $ident.users
+
+userList         infobot.users
+
+# channel list, specifies options which differ from the defaults, by
+# channel.
+
+channelList		infobot.channels
+
+# default quit message
+quitMsg          regrouping; bbiab
+
+
+# how long does something have to be before we'll just volunteer
+# the answer without a question mark, question, or being addressed
+minVolunteerLength 8
+
+# other bots to ask for help
+
+# friendlyBots url purl script mrapi
+
+# sane defines that ALWAYS overwrite existing values at startup
+# this is a prefix for the files (sane-is.txt, sane-are.txt)
+
+sanePrefix sane
+
+# allow weather and METAR lookups, respectively. These should
+# actually be turned into a user modes.  mendel++. Require
+# LWP and metar requires Geo::METAR.
+# weather true
+# metar   true
+
+# babelfish translator.  jdf++. requires LWP, not included.
+# babel   true
+
+# slashdot headlines. requires LWP, not included. get it from CPAN.
+# slash   true
+
+# insult and excuse servers
+# insult  true
+# excuse true
+
+# google search.. simon++ . expanded to www search using several
+# engines since it was so easy once you have WWW::Search.
+# use "update" if you want it to update the db, or comment
+# out if you don't want it. requires WWW::Search, not included.
+# use "forceupdate" to force a db update on every google search.
+wwwsearch  update
+
+# general headline-getter. uses RDF. (LotR++)
+# rss true
+
+# purldoc perl documentation lookup DMasque++, HJ++
+purldoc true
+purldoc_trigger purldoc
+purldoc_max_public 3
+
+# speller. requires the ispell program.
+ispell true
+
+#zippy quotes (infobot, yow  or infobot, be zippy)
+zippy true
+
+# the magic 8ball (divine)
+magic8_answers $miscdir/magic8.txt
+
+# exchange rates (exchange 233 DEM to USD)
+# exchange true
+
+# stock quotes 
+# stockquotes true
+

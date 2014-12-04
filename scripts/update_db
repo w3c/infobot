@@ -1,0 +1,69 @@
+#!/usr/bin/perl
+
+use Fcntl qw(/^O_/);
+
+(my $Me = $0) =~ s-.*/--;
+
+# XXX This should read your config file and default to the database type
+# you specified there.  The library should be extended to support this.
+
+my $module = my $def_module = 'AnyDBM_File';
+if (@ARGV && $ARGV[0] =~ s/^-m//) {
+    $module = shift;
+    if ($module eq '') {
+	@ARGV or die "$Me: no arg for -m specified\n";
+	$module = shift;
+    }
+}
+
+if (@ARGV != 2 || (grep /^-/, @ARGV)) {
+    print "\n";
+    print "  usage:  $Me [-m <dbm module>] <sourcefile> <dbmname>\n";
+    print "\n";
+    print "           adds elements in <sourcefile> to dbm <dbmname>\n";
+    print "\n";
+    print "           <sourcefile> is a text file of one-per-line\n";
+    print "                <key> => <value>\n";
+    print "           pairs, \n";
+    print "\n";
+    print "           <dbmname> the the basename of the dbm db\n";
+    print "           (e.g. 'infobot-is')\n";
+    print "\n";
+    print "           <dbm module> is an alternate for $def_module,\n";
+    print "           eg DB_File\n";
+    print "\n";
+
+    exit(1);
+}
+
+eval "require $module"; die if $@;
+$sourcefile = $ARGV[0];
+$dbname = $ARGV[1];
+
+open(IN, $sourcefile) 
+    || die "can\'t open $sourcefile as source\n";
+
+tie(%db, $module, $dbname, O_RDWR | O_CREAT, 0666)
+    || die "Couldn't open \"$dbname\" with $module: $!";
+$| = 1;
+
+while (<IN>) {
+    chomp;
+    next if /^\s*$/;
+
+    if (!/=>/) {
+	print "skipping: $_";
+	next;
+    }
+    my ($left, $right) = split(/\s*=>\s*/, $_, 2);
+    
+    $left =~ s/^\s*//;
+    $left =~ tr/A-Z/a-z/;
+    $right =~ s/\s+$//;
+
+    $db{$left} = $right;
+    print $left ." => ". $right ."\n" if (!(++$dcount % 100));
+}
+
+close(IN);
+untie(%db) || die "untie() on $dbname failed: $!";

@@ -1,0 +1,3 @@
+*cthulhu!hastur@*unspeakable.net # an example nick!user@host ban
+*!*@*nan*direct.ca
+*!*@200.38.211.*

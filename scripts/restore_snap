@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+
+$snapdir = $ARGV[0];
+
+opendir DIR, $snapdir or die "$snapdir: $!";
+@files = grep /.txt$/, readdir DIR;
+closedir DIR;
+$| = 1;
+
+for $sourcefile (@files) {
+    $sourcefile = "$snapdir/$sourcefile";
+    open(IN, $sourcefile) 
+	|| die "can\'t open $sourcefile as source\n";
+    my $dbname = <IN>;
+    chomp $dbname;
+    die "Bad file: $sourcefile" unless $dbname =~ s/^\# (\S+) .*/$1/;
+
+    print "Restoring $sourcefile into $dbname\n";
+    dbmopen(%db, $dbname, 0644) || die "Couldn't dbmopen \"$dbname\"";
+
+    while (<IN>) {
+	chomp;
+	next if /^\s*$/;
+
+	if (!/=>/) {
+	    print "skipping: $_";
+	    next;
+	}
+	my ($left, $right) = split(/\s*=>\s*/, $_, 2);
+        if ($left =~ /^\s*$/) {
+	    warn "Empty key, ignored:   ($left => $right)\n";
+	    next;
+	}
+	$left =~ s/^\s*//;
+	$left =~ tr/A-Z/a-z/;
+	$right =~ s/\s+$//;
+
+	$db{$left} = $right;
+#	print $left ." => ". $right ."\n" if (!(++$dcount % 100));
+    }
+
+    close(IN);
+    dbmclose(%db);
+}
+

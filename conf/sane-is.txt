@@ -1,0 +1,8 @@
+what => <reply>
+who => <reply>
+when => <reply>
+where => <reply>
+why => <reply>
+it => <reply>
+how => <reply>
+infobot guide => http://www.cs.cmu.edu/~infobot/infobot_guide.html

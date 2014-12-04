@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+
+if ((scalar(@ARGV) != 3) || (grep /^-/, @ARGV)) {
+    print "\n";
+    print "  usage:  $0 <logfile> <nickname> <dbmstem>\n";
+    print "\n";
+    print "           undo the updates entered by nickname that appear\n";
+    print "           in an infobot log file\n";
+    print "\n";
+    print "           <logfile> is an infobot text log file\n";
+    print "\n";
+    print "           <nickname> is the nickname whose effects you\n";
+    print "           want to undo (without the brackets, of course)\n";
+    print "\n";
+    print "           <dbmstem> the the basename of the dbm db\n";
+    print "           (e.g. 'infobot-')\n";
+    print "\n";
+
+    exit(1);
+}
+
+($logfile, $nickname, $dbmstem) = @ARGV;
+
+open(IN, $logfile) 
+    || die "can\'t open $logfile as source\n";
+
+if (not $test = 0) {
+    dbmopen(%dbis, "$dbmstem-is", 0755) 
+	|| die "Couldn't dbmopen \"$dbmstem-is\"";
+    dbmopen(%dbare, "$dbmstem-are", 0755) 
+	|| die "Couldn't dbmopen \"$dbmstem-are\"";
+}
+
+$| = 1;
+
+while (<IN>) {
+    chomp;
+
+    next unless s/^(\d+) \[(\d+)\] (\S+): <(\S+)> //;
+    @attr{qw/time entry type nick/} = ($1, $2, $3, $4);
+    next unless $attr{'nick'} =~ /^$nickname/i;
+
+    if ($attr{'type'} eq 'update') {
+	@attr{qw(X verb corrupted Y)} = /^\'(.*?) =(is|are)=> (.*?)\'; was \'(.*)\'$/;
+
+	$attr{X} =~ s/^\s*//;
+	$attr{X} =~ tr/A-Z/a-z/;
+	$attr{Y} =~ s/\s+$//;
+
+	if ($attr{verb} eq 'is') {
+	    $dbis{$attr{X}} = $attr{Y};
+	} else {
+	    $dbare{$attr{X}} = $attr{Y};
+	}
+
+	push @undo, "enter: $attr{X} =$attr{verb}=> $attr{Y}"; 
+
+    } elsif ($attr{'type'} eq 'forget') {
+	$attr{X} = $_;
+	warn "* can't handle 'forget' easily until 0.43.5: forget $_\n";
+    } elsif ($attr{'type'} eq 'enter') {
+	$attr{qw/X verb Y/} = /^(.*?) =(is|are)=> (.*)$/;
+	push @undo, "delete: $1 =$2=> $3";
+    }
+}
+
+
+close(IN);
+
+while ($act = pop @undo) {
+    ($type, $X, $verb, $Y) = $act =~ /^(\S+): (.*?) =(\S+)=> (.*)$/;
+    if ($type eq 'enter') {
+	print "ENTER $X <=$verb= $Y\n";
+	if ($verb eq "is") {
+	    $dbis{$X} = $Y;
+	} else {
+	    $dbare{$X} = $Y;
+	}
+    } elsif ($type eq 'delete') {
+	print "DELETE $X <=$verb= $Y\n";
+	if ($verb eq "is") {
+	    delete $dbis{$X};
+	} else {
+	    delete $dbare{$X};
+	}
+    }
+}
+
+dbmclose(%dbis);
+dbmclose(%dbare);
+exit;

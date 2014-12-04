@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+
+if (@ARGV != 1) {
+  print "\n";
+  print "  Usage: $0 <file.track>";
+  print "\n";
+  print "         generates text files for update_db from\n";
+  print "         the tracking file log.\n";
+  print "\n";
+  print "         creates <file.track>-is.txt and \n";
+  print "                 <file.track>-are.txt\n";
+  print "\n";
+}
+
+foreach $file (@ARGV) {
+  if (!open IN, $file) {
+    print "can't open $file: $!\n";
+    next;
+  }
+
+  open IS, ">$file-is.txt";
+  open ARE, ">$file-are.txt";
+
+  while (<IN>) {
+    chomp;
+    if  (s/.*?enter: \S+ said \'(.*)\'/$1/ 
+	 or s/.*?update: \'(.*?)\'; was .*/$1/) {
+      next if /FAILED/;
+      if (/^(.*?) is (.*)/) {
+	print IS "$1 => $2\n";
+      } elsif (/^(.*?) are (.*)/) {
+	print ARE "$1 => $2\n";
+      }
+    } else {
+      # do nothing
+    }
+  }
+
+  close IN;
+  close IS;
+  close ARE;
+}

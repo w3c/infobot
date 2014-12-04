@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+    localtime(time);
+$year = 1900 + $year;
+my $snapdir = sprintf "snap-%04d%02d%02d-%02d:%02d:%02d", 
+    $year, $month, $mday, $hour, $min, $sec;
+mkdir $snapdir, 0744 or die "$snapdir: $!";
+$| = 1;
+
+foreach $dbname (<*.db>) {
+    $dbname =~ s/\.db$//;
+    my $target = "$snapdir/$dbname.txt";
+    print "Flattening db $dbname into $target\n";
+
+    dbmopen(%db, $dbname, undef) || die "Couldn't dbmopen \"$dbname\"";
+    open OUT, ">$target" or die "$target: $!";
+    print OUT "# $dbname at ",localtime(time),"\n";
+
+    my $key;
+    foreach $key (keys %db) {
+	my $val = $db{$key};
+	chomp $val;
+	print OUT "$key => $val\n";
+    }
+
+    dbmclose(%db);
+    close OUT;
+    sleep 1;
+}
+

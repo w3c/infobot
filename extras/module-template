@@ -1,0 +1,51 @@
+# Template infobot extension
+
+use strict;
+
+BEGIN {
+	# eval your modules here
+}
+
+sub extension { 
+	# Do stuff, return something
+}
+
+1;
+
+__END__
+
+=head1 NAME
+
+Filename.pl - Description
+
+=head1 PREREQUISITES
+
+	Some::Module
+
+=head1 PARAMETERS
+
+switchname
+
+=over 4
+
+=item value1
+
+Description
+
+=item value2
+
+Description
+
+=back
+
+=head1 PUBLIC INTERFACE
+
+Here you put how you call your sub from the bot user's point of view
+
+=head1 DESCRIPTION
+
+What is it?
+
+=head1 AUTHORS
+
+Who are you?

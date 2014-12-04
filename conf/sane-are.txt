@@ -1,0 +1,6 @@
+what => <reply>
+who => <reply>
+when => <reply>
+where => <reply>
+why => <reply>
+it => <reply>

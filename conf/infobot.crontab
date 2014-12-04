@@ -1,0 +1,2 @@
+*/5 * * * * /usr/users/you/infobot0.1b/run_infobots.pl > /dev/null
+

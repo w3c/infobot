@@ -1,0 +1,108 @@
+#!/usr/bin/perl
+
+# infobot -- copyright kevin lenzo (c) 1997-infinity
+
+# no warrantee expressed or implied. terms as the 
+# license for X11R6 when needed.
+
+BEGIN {
+  $VER_MAJ = 0;
+  $VER_MIN = 45;
+  $VER_MOD = 3;
+
+  $version = "infobot $VER_MAJ\.$VER_MIN\.$VER_MOD [Wurm]";
+}
+
+BEGIN {
+    $filesep = '/'; 
+
+    # set this to the absolute path if you need it; especially
+    # if . is not in your path
+
+    $param{'basedir'} = ($0 =~ /(.*)$filesep/) ? $1 : '.'; 
+    # $infobot_base_dir = '/usr/local/lib/infobot';
+
+    # change this next line if you run a local instance of
+    # an infobot and use the code from the main location.
+    # the 'files' directory contains infobot.config and
+    # infobot.users, among other things.
+
+    $param{'confdir'} = "$param{basedir}${filesep}conf";
+
+    # everything is loaded, then the variables that
+    # you want to set will override the defaults; this
+    # is why all these requires are here.  
+
+    $param{'srcdir'} = $param{'basedir'}.$filesep."src";
+
+    opendir DIR, $param{'srcdir'}
+	or die "can't open source directory $param{srcdir}: $!";
+
+    while ($file = readdir DIR) {
+	next unless $file =~ /\.pl$/;
+	require "$param{srcdir}$filesep$file";
+    }
+    closedir DIR;
+
+    $param{'extradir'} = $param{'basedir'}.$filesep."extras";
+
+    opendir DIR, $param{'extradir'}
+	or die "can't open extras directory $param{extradir}: $!";
+
+    while ($file = readdir DIR) {
+	next unless $file =~ /\.pl$/;
+	require "$param{extradir}$filesep$file";
+    }
+    closedir DIR;
+}
+
+# get the command line arguments
+&getArgs();
+
+# initialize everything 
+&setup();
+
+# launch the irc event loop
+&irc();
+
+exit 0;  # just so you don't look farther down in this file :)
+
+
+# --- support routines
+
+sub usage {
+    print "\n";
+    print "  usage: $0 [-h] [<paramfile1> [<pf2> ...]]\n";
+    print "\n";
+    print "		 -h   this message\n";
+    print "\n";
+}
+
+sub getArgs {
+    if (@ARGV) {
+	while (@ARGV) {
+	    my $arg = shift @ARGV;
+	    if ($arg =~ s/^-//) {
+		# switchies
+		if ($arg eq 'i') {
+		    # go into irc mode despite db setting
+		    $overrideMode = 'IRC';
+		} else {
+		    # -h is in here by default
+		    &usage;
+		    exit(1);
+		}
+	    } else {
+		# no switchie.  currently assumed to be
+		# a paramfile by default
+		push @paramfiles, $arg;
+	    }
+	}
+    } else {
+	@paramfiles = ();
+    }
+}
+
+1;
+
+

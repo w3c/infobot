@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+use Fcntl qw(/^O_/);
+
+(my $Me = $0) =~ s-.*/--;
+
+# XXX This should read your config file and default to the database type
+# you specified there.  The library should be extended to support this.
+
+my $module = my $def_module = 'AnyDBM_File';
+
+if (@ARGV && $ARGV[0] =~ s/^-m//) {
+    $module = shift;
+    if ($module eq '') {
+	@ARGV or die "$Me: no arg for -m specified\n";
+	$module = shift;
+    }
+}
+
+if (!@ARGV || grep /^-/, @ARGV) {
+    print "\n";
+    print "  usage:  $Me [-m <dbm module>] <dbname>\n";
+    print "\n";
+    print "          prints out an ascii flat file of the\n";
+    print "          database <dbname>.  <dbname> should be\n";
+    print "          the basename of the db, e.g.\n";
+    print "\n";
+    print "          $Me infobot-is\n";
+    print "\n";
+    print "          <dbm module> is an alternate for $def_module,\n";
+    print "          eg DB_File\n";
+    print "\n";
+    exit(1);
+}
+
+eval "require $module"; die if $@;
+$| = 1;
+
+foreach $dbname (@ARGV) {
+    tie(%db, $module, $dbname, O_RDONLY, undef)
+	|| die "Couldn't open \"$dbname\" with $module: $!";
+
+    my ($key, $val);
+    while (($key, $val) = each %db) {
+	chomp $val;
+	print "$key => $val\n";
+    }
+
+    untie(%db) || die "untie() on $dbname failed: $!";
+}

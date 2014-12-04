@@ -1,0 +1,13 @@
+main: i learn mainly by observing declarative statements such as "x is at http://www.xxx.com", and then reply when people ask things like "where can i find x?"
+
+author: oznoid (mailto:lenzo@ri.cmu.edu) is my author.
+
+corrections: If I come back with "...but x is at http://xx.xx.xx" or something like that, and you want to change the entry, use "no, x is at http://sdfsdfsdf".  The "No," tells me to supercede the existing value.
+corrections: You can add to an entry with "also".  "X is also at ..."
+
+reply: There is a special tag, <reply>, that is used to override the usual response.  Usually, a response is "X is Y", but it can be made "Y" by making the entry "X is <reply> Y".  
+reply: This is a good way to close junk entries; use "X is <reply>" with nothing after it.
+
+alternation: The | symbol in an entry causes an infobot to choose one of the replies at random. "X is Y|Z" will produce "X is Y" or "X is Z" randomly.
+
+karma: Karma is a community rating system.  use "X++" to increase the karma, or "X--" to decrease it.  Ask for ratings using "karma for X?"

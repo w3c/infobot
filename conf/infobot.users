@@ -1,0 +1,42 @@
+#
+# User File (c) 1998 Infobot & Associates
+#
+# FLAGS
+# ----------------------
+# i   Ignored Flag
+# f   MLF Usage Allowed
+# t   Teaching Allowed
+# r   Removing Allowed
+# m   Modifying Allowed
+# c   Part/Join Allowed
+# s   Searching Allowed (possibly computationally expensive)
+# S   user can make bot Say things
+# e   Extra Privs        [ not implemented robustly: AVOID ]
+# p   oP on channel by public request
+# ----------------------
+# o   Owner Flag
+# ----------------------
+#
+# recommended default user flags: +trmc
+
+UserEntry default {
+	flags +trmcs;
+}
+
+# here's an example entry
+
+UserEntry oznoid {
+	name  "Kevin A. Lenzo";
+	title "that guy";
+	flags +ftrmcsSope;
+	pass  rrmrxB6U4ryRk;
+	mask  *!lenzo@*.speech.cs.cmu.edu;
+}
+
+UserEntry plonk {
+	name  "Eep Malloy"
+	title "that guy II";
+	flags +trmcspo;
+	pass  rrmrxB6U4ryRk;
+	mask  *!*@*.static.telerama.com
+}

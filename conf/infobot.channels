@@ -1,0 +1,10 @@
+# Channel File (c) 1999 Infobot & Associates
+
+ChannelEntry #test {
+	fallback   yes;
+	addressing REQUIRE;
+	shutup	   TRUE;
+	msgonly	   TRUE;
+	continuity 0;
+}
+

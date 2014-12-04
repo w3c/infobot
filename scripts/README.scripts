@@ -1,0 +1,36 @@
+
+update_db [-m <module>] <filename> <dbname>
+
+    adds items in the file <filename> to the db with
+    the basename <dbname>.  if -m <module> is specified that
+    module is used rather than AnyDBM_File.
+
+    file is of the form provided in ../files/infobot-is.txt
+    which is to say
+
+       <key> => <value>
+
+    one per line, and <dbname> is something like infobot-is
+    
+    if the db doesn't exist, it will be created.  if it does
+    exists, the entries will be added, potentially overwriting
+    entries that exists with the same key.
+
+    NOTE: skips lines that do not contain a => ... you can
+    add comments this way.
+
+dump_db [-m <module>] <dbname>
+
+    turns the db into a flat ascii file of the form above.
+    try e.g.
+ 
+       dump_db infobot-is
+       dump_db -m DB_File infobot-is.db
+
+run_infobots.pl
+
+    you'll need to edit this script to give the right home
+    directory, but this is for crontabbing the infobot.  it
+    will run it if it's not already running.  this is not
+    highly tested!  YMMV.
+

@@ -1,0 +1,652 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+
+<html>
+  <head>
+    <title>Infobot Guide 0.44.3</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h1>Infobot Guide 0.44.3</h1>
+
+<hr>
+The canonical source for the infobot source and documentation is
+<a href="http://www.cs.cmu.edu/~infobot">http://www.cs.cmu.edu/~infobot</a>.
+<hr>
+<p>
+The infobot connects to an Internet Relay Chat (IRC) server, 
+joins some channels (maybe), and begins accumulating factoids.
+To run one, download the source, uncompress it, untar it,
+edit the config files, and it up.
+<p>
+Interacting with the bot is pretty straightforward.  Most of
+the commands and variables available to users are listed below.
+The bot will interact via message or on-channel.
+<p>
+
+<hr>
+    <h2> Interacting with an infobot</h2>
+
+    <UL>
+      <LI> <b>setting</b> factoids: X is Y
+	<p>
+	  Saying something like "X is Y" somewhere that the infobot 
+	  can see it will cause the bot to store a factoid, unless
+	  X is already defined.  It sets the value of X to Y.
+	<p>
+      <LI> <b>accessing</b> factoids: What is X?
+	<p>
+	  You can ask an infobot about something in a number of
+	  different ways, including "what is X?", "where is X?",
+	  or just plain "X?".
+	</p>
+	<LI> <b>altering</b> factoids: s/A/B/
+	<p>
+	if you just want to change a <i>part</i> of a factoid, use
+	the <code>s///</code>operator.  you have to address the bot
+	or use a private medium to do this.
+	<p>
+	MyBot, X =~ s/A/B/	
+	<p>
+	will change the first occurence of A to B in the factoid 
+	called X.
+	<p>
+
+      <LI>appending to existing entries: <b><code>also</code></b>
+	<p>
+	  One can extend an existing factoid using the
+	  keyword <code>also</code>
+	<p>
+	<UL>
+	    <code>
+	      poink is also a silly word
+	    </code>
+	</UL>
+	<p>
+
+      <LI>erasing a factoid: <b><code>forget</code></b>
+	<p>
+	  A factoid can easily be deleted by using
+	<p>
+	<DIR>
+	    <code>
+	      infobot, forget poink
+	    </code>
+	</DIR>
+	<p>
+
+      <LI>changing a factoid: <code><b>no,</b> ...</code>
+	<p>
+	  You can change the entry for a factoid completely using
+	<p>
+	<UL>
+	    <code>
+	      no, infobot, x is wugga wugga.
+	    </code>
+	</UL>
+	    <p>
+	  which deletes the prior entry (if possible)
+	  and replaces it with the new one.
+	<p>
+
+      <LI> having the bot tell someone else something: <b><code>tell</code></b>
+	<p>
+	  A user can ask an infobot to tell someone else something.
+	  <p>
+	  <UL>
+	    <code>
+	      infobot, tell fimmtiu about no web
+	    </code>
+	    <p>
+	</UL>
+
+      <LI><b>karma</b> / plusplus
+	<p>
+	  karma for a concept may be incremented or decremeted using
+	  <code>++</code> and <code>--</code>.  You can get the 
+	  current karma 'score' for something by asking for it.
+	  <p>
+	  <UL>
+	    <code>
+	      oznoid++
+	    <p>
+	      oznoid--
+	    <p>
+	      karma for oznoid
+	    </code>
+	    <p>
+	  </UL>
+
+      <LI> <code><b>status</b></code>
+	<p>
+	  infobots reply to status requests.
+	  <p>
+	  <dir>
+	  -> [url] status<p>
+	    [url!infobot@ALF5.SPEECH.CS.CMU.EDU] Since Fri Mar 26 06:42:27 1999, there have been 409
+	    modifications and 2604 questions.  I have been awake for 5 days, 4 hours, 24 minutes,
+	    18 seconds this session, and currently reference 47529 factoids.
+	  </dir>
+
+	</p>
+
+      <LI>joining an allowed channel: <code><b>join</b> #infobot</code>
+	<p>
+	  On IRC, you can tell the infobot to join a channel
+	  that it's allowed to join with
+	<p>
+	<UL>
+	    <code>
+	      infobot, join #infobot
+	    </code>
+	</UL>
+	    <p>
+	  If it is allowed to (in its paramter settings), it
+	  will try to join the channel.
+	<p>
+	  
+
+      <LI>leaving a channel: <code><b>part</b> #infobot</code>
+	<p>
+	  This causes the bot to leave the given channel
+	<p>
+	<UL>
+	    <code>
+	      infobot, part #infobot
+	    </code>
+	</UL>
+	    <p>
+	  <code>leave</code> is a synonym for <code>part</code>.
+	<p>
+
+      <LI><b>random</b> responses with <code>|</code>
+	<p>
+	  You can set a list from which to pick a random response by
+	  using <code>|</code>
+	  <p>
+	<UL>
+	    <code>
+	      x is a|b|c|d
+	    </code>
+	</UL>
+	<p>
+	  When x is asked about, the infobot will randomly choose from
+	  the <code>|</code>-spearated list.
+	<p>
+
+      <LI> The <b><code>&lt;reply&gt;</code></b> factoid tag.
+	<p>
+	  Normally, when the infobot replies to "What is X", it says
+	  "X is Y".  This form makes it just reply "Y".
+	  <p>
+	  <UL>
+	    <code>
+	      X is &lt;reply&gt; Y
+	    </code>
+	  </UL>
+	<p>
+
+      <LI> The <b><code>&lt;action&gt;</code></b> factoid tag (as of 0.43.5)
+	<p>
+	This causes the bot to respond as with <reply> except 
+	as an ACTION.
+	  <p>
+	  <UL>
+	    <code>
+	      X is &lt;action&gt; Y
+	    </code>
+	  </UL>
+	<p>
+
+      <LI><b>backwacking</b>
+	<p>
+	  Use <code>\</code> to protect items from evaluation.
+	<p>
+	<UL>
+	    <CODE>
+	      x is y is y
+	    </CODE>
+	</UL>
+	<p>
+	will normally set <code>x =is=> y is y</code>, but
+	<p>
+	<UL>
+	    <CODE>
+	      x \is y is y
+	    </CODE>
+	</UL>
+	<p>
+	  will set
+		<p>
+	      <UL>
+		  <code>x is y =is=> y</code>
+	      </UL> 
+	      <p>
+	      The <code>forget</code>
+	      and <code>no</code> (update) operators apply before checking
+	      for this. This is also useful for getting around the 
+	      dereferencing of "i" and "me" and so on.
+	<p>
+
+      <LI>the <b><code>$who</code></b> variable
+	<p>
+	  Contains the nickname person currently addressing the bot.
+	  It can be used effectively in replies.
+	  <p>
+	  <UL>
+	    <code>
+	      nice day is &lt;reply&gt; you betcha, $who.
+	    </code>
+	  </UL>
+	<p>
+
+      <LI>the <b><code>$date</code></b> variable
+	<p>
+	  Contains the current date and time, at the bot's host.
+	<p>
+
+      <LI> <code><b>weather</b> for KAGC</code> (0.43.6+)
+      <p>
+      Retrieves the weather from NOAA station KAGC.  See www.noaa.gov.
+		Note: Requires LWP.
+      <p>   
+		<UL>
+      <LI> <code><b>metar</b> KAGC</code> (0.43.6+)
+	      </UL>
+      <p>
+      Retrieves METAR info from NOAA station KAGC.  See www.noaa.gov.
+		Note: Requires Geo::METAR and LWP.
+      <p>   
+      <LI> <code><b>nslookup</b> irc.cs.cmu.edu</code>
+	<p>
+	  performs DNS lookup or reverse-lookup on the hostname or IP.
+	<p>
+      <LI><code><b>internic</b> yahoo.com</code>
+	<p>
+	  gets the internic WHOIS record
+	<p>
+      <LI><code><b>traceroute</b> apple.com</code>
+	<p>
+	  gets the traceroute results from the bot's machine to the target machine.  Summary only.  
+	<p>
+      <LI><b>imdb, websters, foldoc</b>
+	<p>
+	  outputs a well-formed url for a search of IMDB (the Internet Movie DataBase), the Webster's 1913 dictionary, or the foldoc dictionary of geek terms.
+	<p>
+	<UL>
+	    <code>
+	      imdb for clerks<p>
+	      webster for lucre
+	    </code>
+	</UL>
+
+	<p>
+
+	<LI> New in 0.44.3:
+	<p>
+	<UL> 
+	<LI> <code><b>literal</b> foo</code>
+	<p> 
+	   returns the value without the usual post-processing. 
+        </p>	
+	<LI> <code><b>change</b> 100 USD to DEM</code>
+	<p>
+	converts currency. Retrieves the current exchange rates from the net.
+	Requires LWP.
+        </p>	
+	<LI> <code>&lt;rss="http://www.foo.com/summary.rss"&gt;</code> 
+	<p>
+	looks up the RSS file (RDF Site Summary) and returns it
+	in-place where the tag is. Requires XML::RSS and LWP.
+	</p>
+	<LI> <code>give me an excuse</code>, or <code>excuse</code>
+	<p>
+	connects to the excuse server and returns an excuse.
+	requires Net::Telnet.
+	</p>
+	</UL>
+	<p>
+
+      <LI>Ignoring users: <b>ignore</b> nickname, <b>ignore *.a.com</b>
+	<p>
+		Users with the P (oP) flag can tell the bot
+		to ignore people or hostmasks. And 'unignore'.
+		use 'ignorelist' to get the current list of ignored masks,
+		if you have the P flag.
+	</p>
+      <LI><code><b>op</b></code> on channel
+	<p>
+	  The 'p' (oP) flag in the userfile allows this
+	  to work. You'll need to set a hostmask. See
+	  <code>files/infobot.users</code> Also uses a 
+	  crypted password.
+	  <p>
+	  <dir>
+	  <code>
+	  /msg &lt;bot&gt; &lt;password&gt; op
+	  </code>
+	  </dir>
+	<p>
+      <LI><b><code>die</code></b>
+	<p>
+	  If the bot owner (+O, Owner) says this or messages it to the bot, 
+	  it will kill itself.
+	<p>
+    </UL>
+
+<hr>
+    <h2> scripts/utilities </h2>
+    
+    The infobot comes with some scripts for working with
+    the DBM files.
+    <p>
+
+    <UL>
+      <LI><code>update_db</code>
+	<p>
+	  This takes a flat ascii file and inserts it into a DBM file.
+	  It creates a new DBM if it didn't exist.
+	<p>
+	<UL>
+	    <CODE>
+	      scripts/update_db factpacks/code_to_country.txt infobot-is
+	    </CODE>
+	</UL>
+	<p>
+	  will add the factoids in <code>code_to_country.txt</code>
+	  to the <code>infobot-is</code> DBM.
+	<p>
+	  If you've set <code>DBMModule</code> in your config file, you
+	  need to use the <code>-m</code> switch to specify the alternate
+	  module.
+	<p>
+	<UL>
+	    <CODE>
+	      scripts/update_db -d DB_File factpacks/code_to_country.txt infobot-is
+	    </CODE>
+	</UL>
+	<p>
+      <LI><code>dump_db</code>
+	<p>
+	  The converse.  It dumps out the DBM file to a flat
+	  ascii file. Note there is no extension on the DBM name,
+	  even though the system may use one.
+	<p>
+	<UL>
+	    <CODE>
+	      scripts/dump_db infobot-is
+	    </CODE>
+	</UL>
+	<p>
+	  Note there is no extension on the DBM name, even though the 
+	  system may use one (like <code>.pag</code> and 
+	  <code>.dir</code> or <code>.db</code>).
+	<p>
+	  If you've set <code>DBMModule</code> in your config file, you
+	  need to use the <code>-m</code> switch to specify the alternate
+	  module.
+	<p>
+	<UL>
+	    <CODE>
+	      scripts/dump_db -m DB_File infobot-is
+	    </CODE>
+	</UL>
+	<p>
+
+    </UL>
+
+<hr>
+
+    <h3> add-on modules </h3>
+
+    <UL>
+      <LI> <code>nickometer</code>, by Adam Spiers.  Guages
+	how 'lame' a nickname is, as a percentage!<p>
+	  <UL>
+	    <code>
+	    nickometer l33tn1ck
+	    </code>
+	</UL>
+	  <p>
+
+      <LI> <code>babel.pl</code> by jdf. translates using the
+	<a href="http://babelfish.altavista.com/">babelfish</a>
+	web site for machine translation. 
+	In this implementation, English is assumed
+	to be the 'main' language, thus everything is
+	translated <code>to</code> or <code>from</code> another
+	language.  
+	<p>
+	<UL>
+	    <code>
+	      (x|translate) (to|from) (de|fr|pt|es|it|german|french|portugese|spanish|italian)
+	      <p>
+	      translate to german this is a test<br>
+	      x to german this is another test<br>
+	      x to de and a third<br>
+	      x from de ein bisschen Deutsch<p>
+	      German, French, Spanish, Italian, and Portugese are
+	      currently supported by babelfish.
+	    </code>
+	</UL>
+	<p>
+	<LI> <code>METAR</code> support, courtesy of mendel<p>
+	  <code>metar KAGC</code>
+	<p>
+	  retrieves METAR information for KAGC, the Allegheny 
+	  County airport station.
+	  <p>
+      <LI> <code>NOAA</code> weather station support, courtesy of oznoid<p>
+	<ul>
+	    <code>weather KAGC</code>
+	</ul>
+	<p>
+	  retrieves the 
+	  <a href="http://weather.noaa.gov/weather/curcond.html">NOAA</a> 
+	  weather information from (in this example) KAGC. uses the
+	  same 
+	  <a href="http://weather.noaa.gov/weather/curcond.html">codes</a> 
+	  as metar info. 
+	  <p>
+      <LI> <code>slashdot</code> headlines, originally from Chris Tessone, 
+	current version from Rahga.<p>
+	<p>
+	<ul>
+	  <code>slashdot</code><br>
+	  <code>slashdot headlines</code>
+	</ul>
+	<p>
+	  retrieves the current slashdot headlines from
+	  <a href="http://www.slashdot.org">www.slashdot.org</a>.
+
+      <LI> W3Search: search web engines for links; thanks
+	to Simon Couzins for this one. Requires 
+	WWW::Search and WWW::Search::Google. 
+	<ul>
+	    <code>search google for foo</code><br>
+	    <code>google for foo</code><br>
+	    <code>altavista for foo</code><br>
+	    <code>dejanews for foo</code>
+	  </ul>
+	Currently supports what WWW::Search and WWW::Search::Google
+	support, namely:  Dejanews, Google, Gopher, Excite, Infoseek, 
+	HotBot, Lycos, AltaVista, Magellan, PLweb, SFgate, and Verity.
+	<p>
+	<LI>US Airways In-flight info.
+	<ul>
+	  <code>usair flight 781</code>
+	</ul>
+	retrieves the in-flight information for the 
+	appropriate USAir flight. Note: Requires LWP.
+    </UL>
+
+<hr>
+
+    <h2> setting up </h2>
+
+    <h3> configuration </h3>
+    <UL> 
+      <LI> <b> editing the parameter file </b> 
+	<p>
+
+	  The parameter file, usually in <code>files/infobot.config</code>,
+	  is the most direct way to customize the settings on your infobot.
+	<p>
+
+      <LI> <b>editing the user file</b> 
+	<p>
+
+	  The user file, usually in <code>files/infobot.users</code>,
+	  is the most direct way to customize the settings on your infobot.
+	<p>
+
+
+      <LI> <b> editing the main script </b> 
+	<p>
+	  
+	  There are certain items you may need to fiddle with
+	  in the main script of the infobot, but normally you
+	  shouldn't have to. The usual reasons are 
+	  <p>
+	<UL>
+	  <LI> <b> changing the bang path to perl </b> 
+	    <p>
+	      If you get 
+	    <p>
+	      <UL>
+	      <code>
+		  infobot: Command not found.
+	      </code>
+	    </UL>
+	    <p>
+	      or something like it, you need to edit the infobot
+	      script at the top level directory (the script named
+	      'infobot') and set the path to you perl interpreter 
+	      in the very first line of the script to 
+	    <p>
+	    <UL>
+	      <code>
+		#!/path/to/perl
+	      </code>
+	    </UL>
+	    <p>
+	      with, of course, the full path to your perl binary.
+	    <p>
+
+	  <LI> <b> explicitly setting normally relative paths </b>
+	    <p>
+	    If you don't have . in your path, you will probably
+	    need to set some variables explicitly that are normally
+	    determined relative to the infobot script.  This is 
+	    done in the 'infobot' script.
+	    <p>
+	</ul>
+      <LI> <b>Installing Modules to enable features</b>
+	<p>
+	  Several add-ons, like <code>weather</code> and 
+	  web <code>search</code> require perl modules to
+	  be installed. The easiest way to get all the 
+	  things you need is to install the CPAN.pm module,
+	  available from <a href="http://www.perl.com/CPAN/modules-by-module/CPAN/">CPAN</a>, and use it to install what you need.  This
+	  is best done as root.<p>
+	  Once you have the CPAN module installed, use
+	  it to install the required modules:
+	<p>
+	<ul>
+	  <li>the main thing: <code>install Bundle::LWP</code>
+	  <li>for METAR: <code>install Geo::METAR</code>
+	  <li>for W3Search:
+	    <ul>
+	      <li><code>install WWW::Search</code>
+	      <li><code>install WWW::Search::Google</code>
+	    </ul>
+	</ul>
+	Once these are installed, start or restart your infobot.
+    </UL>
+    <p>
+    </UL>
+<hr>
+
+    <h3> running the infobot </h3>
+    
+    <UL>
+      <LI> <b>starting it up</b>
+	<p>
+	  This should be as simple as entering the infobot
+	  parent directory and executing 
+	  <p>
+	<UL>
+	    <code>
+	      infobot
+	    </code>
+	</UL>
+	<p>
+
+	  This starts up the script and generates a whole lot of text.
+	  It's useful and interesting to see what's going on "in the
+	  infobot's head".  You can control the amount of verbage
+	  that comes out with the <code>VERBOSITY</code> parameter,
+	  of you can dump all the output to the bitbucket and background
+	  the process at the same time with
+	<p>
+	<UL>
+	    <code>
+	      nohup infobot > /dev/null &
+	    </code>
+	</UL>
+	<p>
+
+      <LI> <b>the console</b>
+	<p>
+	  Should you choose to look at the stream if consciousness
+	  in the bot, and you haven't reduced the output to nothing
+	  or consigned it to the void, you will be presented with
+	  the <b>console</b>.
+	  
+	  <p>
+	  The first thing you should see, assuming all goes well with
+	  making a connection, is the <b>motd</b> (message-of-the-day)
+	  of the server the bot has been configured to connect to.
+	  <p>
+	  Next, you should see the result of the channel joins specified
+	  in the parameter files, and you may see the bot recognizing
+	  hostmasks of people in the userfile, if any have been put 
+	  in there.
+	  <p>
+	  If you have the <code>ansi_control</code> paramter set,
+	  and your terminal supports it, the output will be in color.
+	  <p>
+	  NOTE that the 'console' is NOT interactive.  You can't
+	  type anything into it; it's just for viewing what's going on.
+	<p>
+      <LI> <b><code>cron</code>ning the infobot</b>
+	<p>
+	  You can set the infobot to automatically start up using
+	  <code>cron</code>.  See the included example <code>crontab</code>
+	  file, in <code>files/infobot.crontab</code>
+    </UL>
+<hr>
+    
+    <h3> shutting it down </h3>
+
+    If you have set yourself as the bot's master in the user file
+    (<code>infobot.users</code>, unless you changed the default),
+    you can just say or message 'die' to the bot.
+    <p>
+      Otherwise, kill the process or hit control-c in the console.
+    <p>
+
+<hr>
+
+    <h2> the FAQ </h2>
+    The FAQ is available at 
+    <a href="http://www.cs.cmu.edu/~infobot/faq/">
+      http://www.cs.cmu.edu/~infobot/faq/</a>.  It is growing. Slowly.
+
+    <hr>
+    <address><a href="mailto:infobot@protected.speech.cs.cmu.edu">infobot@protected.speech.cs.cmu.edu</a></address>
+<!-- Created: Sat Aug 15 12:00:57 EDT 1998 -->
+<!-- hhmts start -->
+Last modified: Tue Oct 26 14:24:41 EDT 1999
+<!-- hhmts end -->
+  </body>
+</html>
