@@ -8,7 +8,7 @@ sub Extras {
     # you have access tothe global variables here, 
     # which is bad, but anyway.
 
-    if ($message =~ /^(tell|inform) *([^ ]*) (that)? *(.*)/) {
+    if ($message =~ /^(tell|inform|notify|advise|alert|advise|enlighten|send\sword\sto|remind|ask|beseech|beg) *([^ ]*) (that|to)? *(.*)/) {
         return &storeNickMessage($2."/".&channel, "at ".&getGMTtimestamp.", $who said: $4");
     }
     # you can return 'NOREPLY' if you want to stop
