@@ -9,7 +9,7 @@ It adds the *inform* feature, which lets you leave a message to someone offline.
 ## Syntax
 
 ```
-botie, inform <nick> [that|to] <message>
+botie, inform <nick> [that|to|about] <message>
 ```
 
 * `inform` may also be any of these other keywords:  
