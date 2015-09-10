@@ -15,7 +15,7 @@ botie, inform <nick> [that|to] <message>
 * `inform` may also be any of these other keywords:  
 `tell`, `notify`, `advise`, `alert`, `advise`, `enlighten`, `send word to`, `ping`, `remind`, `ask`, `beseech`, `beg` or `say`.
 * A comma after the nickname is OK, too.
-* `that` and `to` before the message are entirely optional.
+* `that`, `to` and `about` before the message are entirely optional.
 
 ## Examples
 
