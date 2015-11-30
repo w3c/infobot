@@ -8,8 +8,8 @@ sub Extras {
     # you have access tothe global variables here, 
     # which is bad, but anyway.
 
-    if ($message =~ /^(tell|inform|notify|advise|alert|advise|enlighten|send\sword\sto|ping|remind|ask|beseech|beg|say) *([^ ,]*),? (that|to|about)? *(.*)/) {
-        return &storeNickMessage($2."/".&channel, "at ".&getGMTtimestamp.", $who said: $4");
+    if ($message =~ /^(tell|inform|notify|advise|alert|advise|enlighten|send\sword\sto|ping|remind|ask|beseech|beg|say) +([^ ,]+),? +((that|to|about) +)?(.+)/i) {
+        return &storeNickMessage($2."/".&channel, "at ".&getGMTtimestamp.", $who said: $5");
     }
     # you can return 'NOREPLY' if you want to stop
     # processing past this point but don't want 
