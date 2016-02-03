@@ -120,13 +120,13 @@ sub setup {
     $param{'maxKeySize'}  ||= 30; # maximum LHS length
     $param{'maxDataSize'} ||= 200; # maximum total length
 
-    if (!defined(@verb)) {
+    if (!@verb) {
 	@verb = split(" ", "is are");
 	#  am was were does has can wants needs feels
 	#  handle s-v agreement for non-being verbs later
     }
 
-    if (!defined(@qWord)) {
+    if (!@qWord) {
 	@qWord = split(" ", "what where who"); # why how when
     }
 
