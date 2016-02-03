@@ -1,7 +1,7 @@
 
 # infobot copyright (C) kevin lenzo 1997-98
 
-if (!defined(%digits)) {
+if (!%digits) {
     %digits = ( 
 	       "first", "1",
 	       "second", "2",
