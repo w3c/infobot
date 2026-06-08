@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This bot is based on [infobot](http://www.infobot.org/), written by Kevin Lenzo <lenzo@cs.cmu.edu>.
+This bot is based on [infobot](https://infobot.sourceforge.net/), written by Kevin Lenzo <lenzo@cs.cmu.edu>.
 It adds the *inform* feature, which lets you leave a message to someone offline.
 
 ## Syntax
